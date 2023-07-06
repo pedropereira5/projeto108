@@ -1,0 +1,30 @@
+finger_tips = []
+
+for finger_tip in finger_tips:
+    x, y = finger_tip[0], finger_tip[1]
+    x = int(x * width)  # Multiplica pela largura da tela
+    y = int(y * height)  # Multiplica pela altura da tela
+    cv2.circle(frame, (x, y), 10, (255, 0, 0), -1)  # Desenha círculos azuis nas pontas dos dedos
+
+finger_fold_status = []
+
+for finger_tip in finger_tips:
+    x, y = finger_tip[0], finger_tip[1]
+    x = int(x * width)
+    y = int(y * height)
+
+    if x < reference_point_x:
+        cv2.circle(frame, (x, y), 10, (0, 255, 0), -1)  # Desenha círculos verdes nas pontas dobradas
+        finger_fold_status.append(True)
+    else:
+        cv2.circle(frame, (x, y), 10, (0, 0, 255), -1)  # Desenha círculos vermelhos nas pontas não dobradas
+        finger_fold_status.append(False)
+
+if all(finger_fold_status) and y < previous_y:
+    print("CURTI")
+    cv2.putText(frame, "CURTI", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+elif all(finger_fold_status) and y > previous_y:
+    print("NÃO CURTI")
+    cv2.putText(frame, "NÃO CURTI", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+
+previous_y = y  # Atualiza a posição Y anterior
